@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar:{
       type:String,
-      default: "https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg"
+      default:"https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?size=338&ext=jpg&ga=GA1.1.1224184972.1712016000&semt=ais"
     },
   },
   { timestamps: true }
