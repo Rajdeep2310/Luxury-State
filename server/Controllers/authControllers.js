@@ -18,7 +18,7 @@ const userSignUp = async (req, res, next) => {
 const userSignIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    
+
     const validUser = await User.findOne({ email });
     // Finding if user exists or not:
     if (!validUser) {
@@ -33,7 +33,7 @@ const userSignIn = async (req, res, next) => {
     // creating token here:
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
     // this line is uesed to remove password from coming as output of user as it not a good practice to  show password
-    const { password: pass , ...rest} = validUser._doc;
+    const { password: pass, ...rest } = validUser._doc;
 
     res
       .cookie("access_token", token, { httpOnly: true })
@@ -43,8 +43,47 @@ const userSignIn = async (req, res, next) => {
     next(error);
   }
 };
+
+const googleAuthSignIn = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      // creating token here:
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      // this line is uesed to remove password from coming as output of user as it not a good practice to  show password
+      const { password: pass, ...rest } = user._doc;
+      res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json(rest);
+    } else {
+      // we have genrate password here because google OAuth doesnt pass pasword to our db and password in model is required as true:
+      const generatedPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
+      const newUser = new User({
+        username:
+          req.body.name.split(" ").join("").toLowerCase() +
+          Math.random().toString(36).slice(-4),
+        email: req.body.email,
+        password: hashedPassword,
+        avatar: req.body.photo,
+      });
+      await newUser.save();
+      // creating token here:
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      // this line is uesed to remove password from coming as output of user as it not a good practice to  show password
+      const { password: pass, ...rest } = newUser._doc;
+      res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json(rest);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   userSignUp,
   userSignIn,
+  googleAuthSignIn,
 };
-

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signInFailure , signInStart ,signInSuccess } from "../Redux/user/userSlice";
-
+import OAuth from "./OAuth"
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ const SignIn = () => {
       ...formData,
       [e.target.id]: e.target.value,
     });
-    console.log(formData);
   }
 
   const handleSubmit = async (e) => {
@@ -70,6 +69,7 @@ const SignIn = () => {
         >
           {isLoading ? "Loading..." : "Sign In"}
         </button>
+        <OAuth/>
       </form>
       <div className="flex gap-2 mt-5">
         <p>Dont have an account ?</p>
