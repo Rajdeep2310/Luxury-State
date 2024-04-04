@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const app = express();
 const userRoutes = require("./Routes/userRoutes");
 const authRoutes = require("./Routes/authRoutes");
+const listingRoutes = require("./Routes/listingRoutes");
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
@@ -36,3 +37,4 @@ app.use((err,req,res,next) =>{
 //---------- Routes for Users ------------
 app.use("/api/auth",authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/listing", listingRoutes);
