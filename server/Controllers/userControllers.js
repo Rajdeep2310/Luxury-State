@@ -1,7 +1,7 @@
 const User = require("../Models/User");
 const errorHandler = require("../utils/errorHandler");
 const bcrypt = require("bcrypt");
-
+const Listing = require("../Models/Listing.js")
 //TestAPI
 const userTestApi = (req, res) => {
   res.status(200).json({ message: "Everything is fine...(testapi)" });
@@ -47,8 +47,21 @@ const userInfoDelete = async (req, res, next) => {
   }
 };
 
+const getUserListing = async(req,res,next) =>{
+  try{
+    if(req.user.id === req.params.id){
+      const listings = await Listing.find({ useRef: req.params.id});
+      res.status(200).json(listings)
+    }else{
+      return next(errorHandler(401,"You can only see your own listings..."))
+    }
+  }catch(error){
+    next(error)
+  }
+}
 module.exports = {
   userTestApi,
   updateUserInfo,
   userInfoDelete,
+  getUserListing
 };
