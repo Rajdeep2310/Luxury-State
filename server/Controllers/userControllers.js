@@ -2,12 +2,15 @@ const User = require("../Models/User");
 const errorHandler = require("../utils/errorHandler");
 const bcrypt = require("bcrypt");
 const Listing = require("../Models/Listing.js")
-//TestAPI
+
+
+//------TestAPI(Health)------
 const userTestApi = (req, res) => {
   res.status(200).json({ message: "Everything is fine...(testapi)" });
 };
 
-// Updating a user Info----> <ProfileComponent/>
+// Updating a user Info----> <ProfileComponent/> <------------
+
 const updateUserInfo = async (req, res, next) => {
   try {
     if (req.user.id !== req.params.id)
@@ -15,7 +18,6 @@ const updateUserInfo = async (req, res, next) => {
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
-
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -28,13 +30,14 @@ const updateUserInfo = async (req, res, next) => {
       },
       { new: true }
     );
-
     const { password, ...rest } = updatedUser._doc;
     res.json(rest).status(200);
   } catch (error) {
     next(error);
   }
 };
+
+// Delete Users' account :
 const userInfoDelete = async (req, res, next) => {
   try {
     if (req.user.id !== req.params.id)
@@ -47,11 +50,11 @@ const userInfoDelete = async (req, res, next) => {
   }
 };
 
+// Getting all user's Listing as per user's ID:
 const getUserListing = async(req, res,next) =>{
   if(req.user.id === req.params.id){
     try{
-      const listings = await Listing.find({ userRef: req.params.id});
-      console.log(listings)
+      const listings = await Listing.find({ userRef:req.params.id});
       res.status(200).json(listings)
     }catch(error){
       console.log(error)
@@ -66,5 +69,6 @@ module.exports = {
   userTestApi,
   updateUserInfo,
   userInfoDelete,
-  getUserListing
+  getUserListing,
+  
 };
