@@ -47,18 +47,21 @@ const userInfoDelete = async (req, res, next) => {
   }
 };
 
-const getUserListing = async(req,res,next) =>{
-  try{
-    if(req.user.id === req.params.id){
-      const listings = await Listing.find({ useRef: req.params.id});
+const getUserListing = async(req, res,next) =>{
+  if(req.user.id === req.params.id){
+    try{
+      const listings = await Listing.find({ userRef: req.params.id});
+      console.log(listings)
       res.status(200).json(listings)
-    }else{
-      return next(errorHandler(401,"You can only see your own listings..."))
+    }catch(error){
+      console.log(error)
+      next(error)
     }
-  }catch(error){
-    next(error)
+  }else{
+    return next(errorHandler(401,"You can only create your ow route...."))
   }
 }
+
 module.exports = {
   userTestApi,
   updateUserInfo,
