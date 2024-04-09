@@ -150,6 +150,9 @@ const Profile = () => {
       console.log(error)
     }
   }
+  const handleUpdateListing = () => {
+    //
+  }
    
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -261,7 +264,7 @@ const Profile = () => {
             </Link>
             <div className="flex flex-col items-center">
               <button onClick={()=>handleListingDelete(listing._id)} className="text-red-700 uppercase">Delete</button>
-              <button onC className="text-blue-700 uppercase">Edit</button>
+              <button onClick ={handleUpdateListing} className="text-blue-700 uppercase">Edit</button>
             </div>
           </div>
         ))}
